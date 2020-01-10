@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Filter from './Components/Filter';
 import PersonForm from './Components/PersonForm';
 import Persons from './Components/Persons';
@@ -7,15 +8,18 @@ import './App.css';
 
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arturo Vidal', number: '555 467 362' },
-    { name: 'Dan Abramov', number: '180 234 567' },
-    { name: 'Mark Zucks', number: '07054532198' },
-    { name: 'Zack Effron', number: '971 345 6754' }
-  ]);
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [filtering, setFiltering] = useState('');
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data } = await axios.get('http://localhost:3001/persons')
+      setPersons(data);
+    }
+    fetchData();
+  }, [])
 
   const addPerson = (e) => {
     e.preventDefault();
